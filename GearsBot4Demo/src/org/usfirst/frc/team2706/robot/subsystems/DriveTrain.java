@@ -1,8 +1,10 @@
 package org.usfirst.frc.team2706.robot.subsystems;
 
+import org.usfirst.frc.team2706.robot.Robot;
+import org.usfirst.frc.team2706.robot.commands.TankDriveWithJoystick;
+
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -10,8 +12,6 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import org.usfirst.frc.team2706.robot.Robot;
-import org.usfirst.frc.team2706.robot.commands.TankDriveWithJoystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -89,16 +89,25 @@ public class DriveTrain extends Subsystem {
 	 * Tank style driving for the DriveTrain. 
 	 * @param left Speed in range [-1,1]
 	 * @param right Speed in range [-1,1]
+	 * 
 	 */
 	public void drive(double left, double right) {
-		drive.tankDrive(left, right);
+		drive.drive(left, right);
 	}
 
 	/**
-	 * @param joy The ps3 style joystick to use to drive tank style.
+	 * @param joy Get the joystick and use arcade drive
+	 * so the controls are intuitive.
+	 * Tank drive was difficult to work with on the joystick
+	 * during testing. 
+	 * 
+	 * @TODO Add throttle controls. Maybe have the joystick sensitivity
+	 * reduce when a trigger is pulled?
+	 * The Sidewinder has this ability using the physical throttle,
+	 * but the xbox controls do not. 
 	 */
 	public void drive(Joystick joy) {
-		drive(-joy.getY(), -joy.getAxis(AxisType.kThrottle));
+		drive.arcadeDrive(joy);
 	}
 
 	/**
