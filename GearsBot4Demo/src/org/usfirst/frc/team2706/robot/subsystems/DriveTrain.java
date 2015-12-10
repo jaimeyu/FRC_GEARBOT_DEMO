@@ -44,6 +44,7 @@ public class DriveTrain extends Subsystem {
 		// simulate 360 tick encoders. This if statement allows for the
 		// real robot to handle this difference in devices.
 		if (Robot.isReal()) {
+			/* !!! @TODO: PLEASE TUNE THIS TO MATCH ENCODER TYPE !!! */
 			left_encoder.setDistancePerPulse(0.042);
 			right_encoder.setDistancePerPulse(0.042);
 		} else {
@@ -80,9 +81,20 @@ public class DriveTrain extends Subsystem {
 	public void log() {
 		SmartDashboard.putNumber("Left Distance", left_encoder.getDistance());
 		SmartDashboard.putNumber("Right Distance", right_encoder.getDistance());
+		SmartDashboard.putNumber("Combined distance", (left_encoder.getDistance()+ right_encoder.getDistance())/2);
 		SmartDashboard.putNumber("Left Speed", left_encoder.getRate());
 		SmartDashboard.putNumber("Right Speed", right_encoder.getRate());
-		SmartDashboard.putNumber("Gyro", gyro.getAngle());
+		SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
+		SmartDashboard.putNumber("Gyro Rate", gyro.getRate());
+		SmartDashboard.putNumber("FL motor speed", front_left_motor.get());
+		SmartDashboard.putNumber("BL motor speed", back_left_motor.get());
+		SmartDashboard.putNumber("FR motor speed", front_right_motor.get());
+		SmartDashboard.putNumber("BR motor speed", back_right_motor.get());
+		SmartDashboard.putString("Left Encoder direction", left_encoder.getDirection() ? "FWRD": "BKWD");
+		SmartDashboard.putString("Right Encoder direction", right_encoder.getDirection() ? "FWRD" : "BKWD");
+		SmartDashboard.putNumber("BR motor speed", back_right_motor.get());
+		SmartDashboard.putNumber("RangeFinder", getDistanceToObstacle());
+		
 	}
 
 	/**
@@ -135,9 +147,20 @@ public class DriveTrain extends Subsystem {
 	
 	/**
 	 * @return The distance to the obstacle detected by the rangefinder. 
+	 * 
+	 * @TODO: This needs to be tuned for reality and the type of range finder we use.
+	 * eg: 1v = 0.1 meter. 
+	 * 
+	 * @TODO: Do we need to smooth this out? 
+	 * @TODO: Should this be a smartdashboard tunable?
 	 */
 	public double getDistanceToObstacle() {
 		// Really meters in simulation since it's a rangefinder...
-		return rangefinder.getAverageVoltage();
+		double distance = 0;
+			distance = rangefinder.getAverageVoltage();
+		if (!Robot.isSimulation()) {
+			distance *= 0.1;/* !!! @TODO PLEASE TUNE THIS !! */
+		}
+		return distance;
 	}
 }
