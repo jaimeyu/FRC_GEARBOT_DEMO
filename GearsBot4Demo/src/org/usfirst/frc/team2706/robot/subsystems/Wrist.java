@@ -22,6 +22,10 @@ public class Wrist extends PIDSubsystem {
     private SpeedController motor;
     private Potentiometer pot;
 
+    /* !!! @TODO: PLEASE TUNE THESE!!! 
+     * 
+     * @TODO: Make these smartdashboard tunable on the fly. 
+     */
     private static final double kP_real = 1,
             kP_simulation = 0.05;
     
