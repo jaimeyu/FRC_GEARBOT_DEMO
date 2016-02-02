@@ -26,97 +26,78 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	Command autonomousCommand;
+    Command autonomousCommand;
+    
+    public static DriveTrain drivetrain;
+    public static Elevator elevator;
+    public static Wrist wrist;
+    public static Claw claw;
+    public static OI oi;
 
-	public static DriveTrain drivetrain;
-	public static Elevator elevator;
-	public static Wrist wrist;
-	public static Claw claw;
-	public static OI oi;
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    public void robotInit() {
+        // Initialize all subsystems
+        drivetrain = new DriveTrain();
+        elevator = new Elevator();
+        wrist = new Wrist();
+        claw = new Claw();
+        oi = new OI();
+        
+        // instantiate the command used for the autonomous period
+        autonomousCommand = new Autonomous();
 
-	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
-	 */
-	public void robotInit() {
-		// Initialize all subsystems
-		drivetrain = new DriveTrain();
-		elevator = new Elevator();
-		wrist = new Wrist();
-		claw = new Claw();
-		oi = new OI();
+        // Show what command your subsystem is running on the SmartDashboard
+        SmartDashboard.putData(drivetrain);
+        SmartDashboard.putData(elevator);
+        SmartDashboard.putData(wrist);
+        SmartDashboard.putData(claw);
+    }
 
-		// instantiate the command used for the autonomous period
-		autonomousCommand = new Autonomous();
+    public void autonomousInit() {
+        autonomousCommand.start(); // schedule the autonomous command (example)
+    }
 
-		// Show what command your subsystem is running on the SmartDashboard
-		SmartDashboard.putData(drivetrain);
-		SmartDashboard.putData(elevator);
-		SmartDashboard.putData(wrist);
-		SmartDashboard.putData(claw);
-	}
+    /**
+     * This function is called periodically during autonomous
+     */
+    public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
+        log();
+    }
 
-	/* 
-	 * This interface is used when we practice and diable any of the operating modes.
-	 * I've noticed that if we hit disable in the simulator,
-	 * it actually dosn't tell the robot to kill its motors
-	 * and then it runs off the map. Goal is not to do this in real life.
-	 * 
-	 * (non-Javadoc)
-	 * @see edu.wpi.first.wpilibj.IterativeRobot#disabledInit()
-	 */
-	public void disabledInit() {
-		// Kill autonomous
-		autonomousCommand.cancel();
-		// Kill Drive train's motors
-		Robot.drivetrain.drive(0, 0);
+    public void teleopInit() {
+    	// This makes sure that the autonomous stops running when
+        // teleop starts running. If you want the autonomous to 
+        // continue until interrupted by another command, remove
+        // this line or comment it out.
+        autonomousCommand.cancel();
+    }
 
-	}
-
-	public void autonomousInit() {
-		autonomousCommand.start(); // schedule the autonomous command (example)
-	}
-
-	/**
-	 * This function is called periodically during autonomous
-	 */
-	public void autonomousPeriodic() {
-		Scheduler.getInstance().run();
-		log();
-	}
-
-	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
-		autonomousCommand.cancel();
-	}
-
-	/**
-	 * This function is called periodically during operator control.
-	 * 
-	 * About 50 hz. 
-	 */
-	public void teleopPeriodic() {
-		Scheduler.getInstance().run();
-		log();
-	}
-
-	/**
-	 * This function is called periodically during test mode
-	 */
-	public void testPeriodic() {
-		LiveWindow.run();
-	}
+    /**
+     * This function is called periodically during operator control
+     */
+    public void teleopPeriodic() {
+        Scheduler.getInstance().run();
+        log();
+    }
+    
+    /**
+     * This function is called periodically during test mode
+     */
+    public void testPeriodic() {
+        LiveWindow.run();
+    }
 
 	/**
 	 * The log method puts interesting information to the SmartDashboard.
 	 */
-	private void log() {
-		wrist.log();
-		elevator.log();
-		drivetrain.log();
-		claw.log();
-	}
+    private void log() {
+        wrist.log();
+        elevator.log();
+        drivetrain.log();
+        claw.log();
+    }
 }

@@ -22,10 +22,6 @@ public class Elevator extends PIDSubsystem {
     private SpeedController motor;
     private Potentiometer pot;
 
-    /* !!! @TODO: PLEASE TUNE THESE!!! 
-     * 
-     * @TODO: Make these smartdashboard tunable on the fly. 
-     */
     private static final double kP_real = 4, kI_real = 0.07,
             kP_simulation = 18, kI_simulation = 0.2;
     
